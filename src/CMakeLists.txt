@@ -8,6 +8,8 @@ add_executable(Project1
         main.cpp
         menu/menu.cpp
         parser/parser.cpp
+        pipeline/pipeline.cpp
+        webs/webs.cpp
 )
 
 target_include_directories(Project1 PRIVATE

@@ -143,7 +143,7 @@ Registers parseRegistersFile(const string& filename) {
         string value = trim(line.substr(colonPos + 1));
 
         if (key == "registers") {
-            r.registers = stoi(value);
+            r.numRegisters = stoi(value);
         }
         else if (key == "algorithm") {
 
@@ -152,7 +152,7 @@ Registers parseRegistersFile(const string& filename) {
             r.algorithm = parts[0];
 
             if (parts.size() > 1)
-                r.parameter = stoi(parts[1]);
+                r.param = stoi(parts[1]);
         }
     }
 

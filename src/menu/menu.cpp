@@ -1,6 +1,7 @@
 #include "menu.h"
 
 #include "parser/parser.h"
+#include "pipeline/pipeline.h"
 
 #include <iostream>
 #include <string>
@@ -49,7 +50,7 @@ void runMenu() {
 
                     // Optional debug info
                     cout << "Variables loaded: " << variables.size() << endl;
-                    cout << "Registers: " << registers.registers << endl;
+                    cout << "Registers: " << registers.numRegisters << endl;
                     cout << "Algorithm: " << registers.algorithm << endl;
                 }
                 catch (const exception& e) {
@@ -71,11 +72,16 @@ void runMenu() {
                 cout << "\nOutput file: ";
                 cin >> outputFile;
 
-                // TODO:
-                // call allocation algorithm
-                // save output file
+                try {
 
-                cout << "\nAllocation not implemented yet.\n";
+                    runPipeline(variables, registers, outputFile);
+
+                    cout << "\nAllocation completed successfully.\n";
+                }
+                catch (const exception& e) {
+
+                    cerr << "\nError: " << e.what() << endl;
+                }
 
                 break;
             }

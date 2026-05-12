@@ -1,32 +1,12 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "../data.h"
+
 #include <string>
 #include <vector>
 
 using namespace std;
-
-struct ProgramPoint {
-    int line;
-    bool isStart;
-    bool isEnd;
-};
-
-struct LiveRange {
-    vector<ProgramPoint> points;
-};
-
-struct Variable {
-    string name;
-    vector<LiveRange> ranges;
-};
-
-// agora chama-se Registers (antes Config)
-struct Registers {
-    int registers = 0;
-    string algorithm;
-    int parameter = 0;
-};
 
 // utils
 string trim(const string& str);
