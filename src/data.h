@@ -35,6 +35,7 @@ struct Web {
     int id;
     string varName;
     vector<ProgramPoint> points;
+    int reg = -1;
 };
 
 // ---------------- Register Config ----------------

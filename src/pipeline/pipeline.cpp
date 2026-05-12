@@ -3,7 +3,8 @@
 #include "../webs/webs.h"
 #include "../graph/Graph.h"
 #include "../graph_builder/graph_builder.h"
-//#include "../output/output.h"
+#include "../register_allocation/basic_allocation.h"
+#include "../output/output.h"
 
 using namespace std;
 
@@ -23,16 +24,16 @@ void runPipeline(
 
     // 3. Register allocation
     AllocationResult result =
-        allocateRegisters(
+        basicAllocation(
             graph,
+            webs,
             registers.numRegisters
         );
 
-    /*
     // 4. Output
     writeOutputFile(
         outputFile,
         webs,
         result
-    );*/
+    );
 }

@@ -11,6 +11,10 @@ add_executable(Project1
         pipeline/pipeline.cpp
         webs/webs.cpp
         graph_builder/graph_builder.cpp
+        register_allocation/basic_allocation.cpp
+        register_allocation/basic_allocation.h
+        output/output.cpp
+        output/output.h
 )
 
 target_include_directories(Project1 PRIVATE
