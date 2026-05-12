@@ -10,6 +10,7 @@ add_executable(Project1
         parser/parser.cpp
         pipeline/pipeline.cpp
         webs/webs.cpp
+        graph_builder/graph_builder.cpp
 )
 
 target_include_directories(Project1 PRIVATE

@@ -2,7 +2,7 @@
 
 #include "../webs/webs.h"
 #include "../graph/Graph.h"
-//#include "../allocator/allocator.h"
+#include "../graph_builder/graph_builder.h"
 //#include "../output/output.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ void runPipeline(
     vector<Web> webs =
         buildWebs(variables);
 
-    /* //2. Build interference graph (GRAPH DO PROF)
+    //2. Build interference graph (GRAPH DO PROF)
     Graph<int> graph =
         buildInterferenceGraph(webs);
 
@@ -28,6 +28,7 @@ void runPipeline(
             registers.numRegisters
         );
 
+    /*
     // 4. Output
     writeOutputFile(
         outputFile,
