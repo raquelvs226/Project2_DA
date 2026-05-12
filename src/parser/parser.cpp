@@ -2,250 +2,159 @@
 
 #include <fstream>
 #include <sstream>
-#include <iostream>
-#include <algorithm>
 #include <stdexcept>
-#include <map>
 
 using namespace std;
 
-// Utility
+// ---------------- utils ----------------
 
-std::string Parser::trim(const std::string& s) {
-    const std::string ws = " \t\r\n";
-    size_t start = s.find_first_not_of(ws);
-    if (start == std::string::npos) return "";
-    size_t end = s.find_last_not_of(ws);
-    return s.substr(start, end - start + 1);
+string trim(const string& str) {
+    size_t first = str.find_first_not_of(" \t\r\n");
+
+    if (first == string::npos)
+        return "";
+
+    size_t last = str.find_last_not_of(" \t\r\n");
+
+    return str.substr(first, last - first + 1);
 }
 
-// parsePoints
+vector<string> split(const string& str, char delimiter) {
+    vector<string> tokens;
 
-vector<ProgramPoint> Parser::parsePoints(const std::string& token) {
-    vector<ProgramPoint> result;
-    istringstream ss(token);
-    string item;
+    stringstream ss(str);
+    string token;
 
-    while (getline(ss, item, ',')) {
-        item = trim(item);
-        if (item.empty()) continue;
-
-        ProgramPoint pp;
-
-        char last = item.back();
-        if (last == '+') {
-            pp.kind = ProgramPoint::Kind::DEF;
-            item.pop_back();
-        } else if (last == '-') {
-            pp.kind = ProgramPoint::Kind::USE;
-            item.pop_back();
-        } else {
-            pp.kind = ProgramPoint::Kind::NONE;
-        }
-
-        try {
-            pp.line = std::stoi(item);
-        } catch (...) {
-            throw runtime_error("Invalid line number in point list: '" + item + "'");
-        }
-
-        result.push_back(pp);
+    while (getline(ss, token, delimiter)) {
+        tokens.push_back(trim(token));
     }
 
-    return result;
+    return tokens;
 }
 
-// parseLiveRanges
+// ---------------- RANGES ----------------
 
-void Parser::parseLiveRanges(const string& filename) {
-    ifstream file(filename);
-    if (!file.is_open())
-        throw std::runtime_error("Cannot open live-ranges file: " + filename);
+vector<Variable> parseRangesFile(const string& filename) {
 
-    liveRanges.clear();
+    string filePath =  "../../datasets/ranges/" + filename;
+
+    ifstream file(filePath);
+
+    if (!file.is_open()) {
+        throw runtime_error("Could not open ranges file: " + filePath);
+    }
+
+    vector<Variable> variables;
     string line;
-    int lineNum = 0;
 
     while (getline(file, line)) {
-        ++lineNum;
+
         line = trim(line);
 
-        // skip comments and empty lines
-        if (line.empty() || line[0] == '#') continue;
+        if (line.empty() || line[0] == '#')
+            continue;
 
-        // split at the first ':'
-        size_t colon = line.find(':');
-        if (colon == string::npos)
-            throw runtime_error("Missing ':' on line " + to_string(lineNum)
-                                     + " of " + filename);
+        size_t colonPos = line.find(':');
 
-        LiveRange lr;
-        lr.varName = trim(line.substr(0, colon));
-        std::string pointsStr = trim(line.substr(colon + 1));
+        if (colonPos == string::npos)
+            throw runtime_error("Invalid line: " + line);
 
-        if (lr.varName.empty())
-            throw runtime_error("Empty variable name on line " + to_string(lineNum));
+        string varName = trim(line.substr(0, colonPos));
+        string rangePart = trim(line.substr(colonPos + 1));
 
-        lr.points = parsePoints(pointsStr);
+        vector<string> tokens = split(rangePart, ',');
 
-        if (lr.points.empty())
-            throw runtime_error("No program points for variable '"
-                                     + lr.varName + "' on line " + to_string(lineNum));
+        LiveRange range;
 
-        liveRanges.push_back(move(lr));
+        for (const string& token : tokens) {
+
+            if (token.empty())
+                continue;
+
+            ProgramPoint p;
+            p.isStart = false;
+            p.isEnd = false;
+
+            string num = token;
+
+            if (token.back() == '+') {
+                p.isStart = true;
+                num = token.substr(0, token.size() - 1);
+            }
+            else if (token.back() == '-') {
+                p.isEnd = true;
+                num = token.substr(0, token.size() - 1);
+            }
+
+            p.line = stoi(num);
+            range.points.push_back(p);
+        }
+
+        bool found = false;
+
+        for (auto& v : variables) {
+            if (v.name == varName) {
+                v.ranges.push_back(range);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            Variable v;
+            v.name = varName;
+            v.ranges.push_back(range);
+            variables.push_back(v);
+        }
     }
+
+    return variables;
 }
 
+// ---------------- REGISTERS ----------------
 
-void Parser::parseRegisterConfig(const string& filename) {
-    ifstream file(filename);
-    if (!file.is_open())
-        throw std::runtime_error("Cannot open register config file: " + filename);
+Registers parseRegistersFile(const string& filename) {
 
-    config = RegisterConfig{}; // reset
-    std::string line;
-    int lineNum = 0;
+    string filePath =  "../../datasets/registers/" + filename;
+
+    ifstream file(filePath);
+
+    if (!file.is_open()) {
+        throw runtime_error("Could not open registers file: " + filePath);
+    }
+
+    Registers r;
+
+    string line;
 
     while (getline(file, line)) {
-        ++lineNum;
+
         line = trim(line);
-        if (line.empty() || line[0] == '#') continue;
 
-        size_t colon = line.find(':');
-        if (colon == string::npos)
-            throw runtime_error("Missing ':' on line " + to_string(lineNum)
-                                     + " of " + filename);
+        if (line.empty() || line[0] == '#')
+            continue;
 
-        string key   = trim(line.substr(0, colon));
-        string value = trim(line.substr(colon + 1));
+        size_t colonPos = line.find(':');
+
+        if (colonPos == string::npos)
+            throw runtime_error("Invalid line: " + line);
+
+        string key = trim(line.substr(0, colonPos));
+        string value = trim(line.substr(colonPos + 1));
 
         if (key == "registers") {
-            try {
-                config.numRegisters = stoi(value);
-            } catch (...) {
-                throw runtime_error("Invalid register count: '" + value + "'");
-            }
-            if (config.numRegisters < 0)
-                throw runtime_error("Register count cannot be negative.");
-
-        } else if (key == "algorithm") {
-            // value is e.g. "basic", "spilling, 2", "splitting, 3", "free"
-            size_t comma = value.find(',');
-            string algName = trim(value.substr(0, comma));
-
-            if (algName == "basic") {
-                config.algorithm = AlgorithmKind::BASIC;
-                config.param     = 0;
-
-            } else if (algName == "spilling") {
-                config.algorithm = AlgorithmKind::SPILLING;
-                if (comma == string::npos)
-                    throw runtime_error("'spilling' requires a numeric parameter K.");
-                try {
-                    config.param = std::stoi(trim(value.substr(comma + 1)));
-                } catch (...) {
-                    throw runtime_error("Invalid spilling parameter K.");
-                }
-
-            } else if (algName == "splitting") {
-                config.algorithm = AlgorithmKind::SPLITTING;
-                if (comma == string::npos)
-                    throw runtime_error("'splitting' requires a numeric parameter K.");
-                try {
-                    config.param = std::stoi(trim(value.substr(comma + 1)));
-                } catch (...) {
-                    throw runtime_error("Invalid splitting parameter K.");
-                }
-
-            } else if (algName == "free") {
-                config.algorithm = AlgorithmKind::FREE;
-                config.param     = 0;
-
-            } else {
-                throw runtime_error("Unknown algorithm: '" + algName + "'");
-            }
+            r.registers = stoi(value);
         }
-        // unknown keys are silently ignored (forward-compatibility)
-    }
-}
+        else if (key == "algorithm") {
 
-// mergeInto  (private helper)
+            vector<string> parts = split(value, ',');
 
-void Parser::mergeInto(Web& dst, const Web& src) {
-    dst.lines.insert(src.lines.begin(), src.lines.end());
-    dst.defLines.insert(src.defLines.begin(), src.defLines.end());
-    dst.useLines.insert(src.useLines.begin(), src.useLines.end());
-}
+            r.algorithm = parts[0];
 
-// buildWebs
-
-static Web liveRangeToWeb(const LiveRange& lr, int id) {
-    Web w;
-    w.id      = id;
-    w.varName = lr.varName;
-    for (const auto& pp : lr.points) {
-        w.lines.insert(pp.line);
-        if (pp.isDef()) w.defLines.insert(pp.line);
-        if (pp.isUse()) w.useLines.insert(pp.line);
-    }
-    return w;
-}
-
-static bool shouldFuse(const Web& a, const Web& b) {
-    // Condition 1: any common line
-    for (int line : a.lines) {
-        if (b.lines.count(line)) return true;
-    }
-
-    // Condition 2: a USE in a coincides with a DEF in b (or vice-versa)
-    for (int uLine : a.useLines) {
-        if (b.defLines.count(uLine)) return true;
-    }
-    for (int uLine : b.useLines) {
-        if (a.defLines.count(uLine)) return true;
-    }
-
-    return false;
-}
-
-void Parser::buildWebs() {
-    webs.clear();
-
-    // Group live ranges by variable name
-    map<string, vector<LiveRange>> byVar;
-    for (const auto& lr : liveRanges)
-        byVar[lr.varName].push_back(lr);
-
-    int nextId = 0;
-
-    for (auto& [varName, ranges] : byVar) {
-        // Convert to preliminary webs
-        std::vector<Web> varWebs;
-        varWebs.reserve(ranges.size());
-        for (const auto& lr : ranges)
-            varWebs.push_back(liveRangeToWeb(lr, nextId++));
-
-        // Greedy fixed-point merge
-        bool merged = true;
-        while (merged) {
-            merged = false;
-            for (size_t i = 0; i < varWebs.size() && !merged; ++i) {
-                for (size_t j = i + 1; j < varWebs.size(); ++j) {
-                    if (shouldFuse(varWebs[i], varWebs[j])) {
-                        mergeInto(varWebs[i], varWebs[j]);
-                        varWebs.erase(varWebs.begin() + j);
-                        merged = true;
-                        break; // restart inner loop
-                    }
-                }
-            }
+            if (parts.size() > 1)
+                r.parameter = stoi(parts[1]);
         }
-
-        for (auto& w : varWebs)
-            webs.push_back(move(w));
     }
 
-    // Re-number all webs sequentially from 0
-    for (int i = 0; i < static_cast<int>(webs.size()); ++i)
-        webs[i].id = i;
+    return r;
 }

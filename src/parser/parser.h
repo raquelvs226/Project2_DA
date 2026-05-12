@@ -1,36 +1,39 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "data.h"
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class Parser {
-public:
-    // results (populated after parse + buildWebs)
-
-    vector<LiveRange>  liveRanges; ///< Raw ranges from the ranges file
-    vector<Web>        webs;       ///< Merged webs (one entry per web)
-    RegisterConfig          config;     ///< Contents of the register config file
-
-    // main entry points 
-
-    void parseLiveRanges(const string& filename);
-
-    void parseRegisterConfig(const string& filename);
-
-    void buildWebs();
-
-    // helpers (exposed for unit testing)
-
-    static vector<ProgramPoint> parsePoints(const string& token);
-
-    static string trim(const string& s);
-
-private:
-    static void mergeInto(Web& dst, const Web& src);
+struct ProgramPoint {
+    int line;
+    bool isStart;
+    bool isEnd;
 };
 
-#endif // PARSER_H
+struct LiveRange {
+    vector<ProgramPoint> points;
+};
+
+struct Variable {
+    string name;
+    vector<LiveRange> ranges;
+};
+
+// agora chama-se Registers (antes Config)
+struct Registers {
+    int registers = 0;
+    string algorithm;
+    int parameter = 0;
+};
+
+// utils
+string trim(const string& str);
+vector<string> split(const string& str, char delimiter);
+
+// parsing
+vector<Variable> parseRangesFile(const string& filename);
+Registers parseRegistersFile(const string& filename);
+
+#endif
