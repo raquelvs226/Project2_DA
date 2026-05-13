@@ -56,12 +56,8 @@ void writeOutputFile(
     file << "registers: " << result.usedRegisters << "\n";
 
     if (allSpilled) {
-        // all webs go to memory
         for (const auto& web : webs)
             file << "M: web" << web.id << "\n";
-
-        cerr << "Warning: register allocation was not possible with "
-             << "the provided number of registers. All webs assigned to memory.\n";
     } else {
         // group webs by register: r0 → [web0, web2], r1 → [web1], M → [web3]
         map<int, vector<int>> regToWebs; // reg → list of web ids
