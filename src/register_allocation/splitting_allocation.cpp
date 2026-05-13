@@ -3,16 +3,16 @@
 #include "../graph_builder/graph_builder.h"
 
 #include <algorithm>
+#include <climits>
 #include <iostream>
 #include <set>
 
 using namespace std;
 
-// Find the split index (1-based, into the sorted points array) that maximises the
-// number of interfering neighbours freed — i.e., neighbours that, after the split,
-// only overlap with one of the two sub-webs and therefore lose one interference edge.
-// Falls back to the median if no neighbour information is available.
-static size_t findBestSplitIndex(
+// For every possible split of `web` into two contiguous halves (by sorted line number),
+// compute deg(A) and deg(B) in the current interference graph.
+// Returns the split index and the resulting min max(deg(A), deg(B)).
+static pair<size_t, int> findBestSplitPoint(
     const Web& web,
     const Graph<int>& g,
     const vector<Web>& allWebs
@@ -22,12 +22,11 @@ static size_t findBestSplitIndex(
         [](const ProgramPoint& a, const ProgramPoint& b) { return a.line < b.line; });
 
     size_t n = sorted.size();
-    if (n < 2) return 1;
-
     Vertex<int>* v = g.findVertex(web.id);
-    if (!v) return n / 2;
 
-    // Collect neighbour webs once
+    if (n < 2 || !v) return { n / 2, INT_MAX };
+
+    // Collect neighbours once
     vector<const Web*> neighbours;
     for (auto* edge : v->getAdj()) {
         int nid = edge->getDest()->getInfo();
@@ -35,37 +34,42 @@ static size_t findBestSplitIndex(
             if (w.id == nid) { neighbours.push_back(&w); break; }
     }
 
-    size_t bestIdx  = n / 2;
-    int    bestFreed = -1;
+    size_t bestIdx    = n / 2;
+    int    bestMaxDeg = INT_MAX;
 
     for (size_t splitIdx = 1; splitIdx < n; splitIdx++) {
         set<int> linesA, linesB;
         for (size_t k = 0;        k < splitIdx; k++) linesA.insert(sorted[k].line);
         for (size_t k = splitIdx; k < n;        k++) linesB.insert(sorted[k].line);
 
-        int freed = 0;
+        int degA = 0, degB = 0;
         for (const auto* nb : neighbours) {
             bool overA = false, overB = false;
             for (const auto& p : nb->points) {
                 if (linesA.count(p.line)) overA = true;
                 if (linesB.count(p.line)) overB = true;
             }
-            if (overA != overB) freed++;   // neighbour freed from one side
+            if (overA) degA++;
+            if (overB) degB++;
         }
-        if (freed > bestFreed) { bestFreed = freed; bestIdx = splitIdx; }
+
+        int maxDeg = max(degA, degB);
+        if (maxDeg < bestMaxDeg) {
+            bestMaxDeg = maxDeg;
+            bestIdx    = splitIdx;
+        }
     }
-    return bestIdx;
+
+    return { bestIdx, bestMaxDeg };
 }
 
 AllocationResult splittingAllocation(vector<Web>& webs, int numRegisters, int maxSplits) {
 
-    // Start next ID just above the current maximum
     int nextId = 0;
     for (const auto& w : webs) nextId = max(nextId, w.id + 1);
 
     for (int splits = 0; splits <= maxSplits; splits++) {
 
-        // Try basic allocation on a working copy
         vector<Web> tmp = webs;
         Graph<int>  g   = buildInterferenceGraph(tmp);
         AllocationResult res = basicAllocation(g, tmp, numRegisters);
@@ -81,18 +85,27 @@ AllocationResult splittingAllocation(vector<Web>& webs, int numRegisters, int ma
 
         if (splits == maxSplits) break;
 
-        // Find the highest-degree internally-spilled web with at least 2 points
-        int bestId  = -1;
-        int bestDeg = -1;
+        // Among all internally-spilled webs with >= 2 points, pick the (web, split point)
+        // pair that minimises max(deg(A), deg(B)) — i.e., the split that most relieves
+        // interference pressure on both resulting sub-webs.
+        int    bestId       = -1;
+        size_t bestSplitIdx = 0;
+        int    bestMaxDeg   = INT_MAX;
+
         for (size_t i = 0; i < tmp.size(); i++) {
             if (tmp[i].reg != -1)          continue;
             if (webs[i].points.size() < 2) continue;
-            Vertex<int>* v = g.findVertex(webs[i].id);
-            int deg = v ? (int)v->getAdj().size() : 0;
-            if (deg > bestDeg) { bestDeg = deg; bestId = webs[i].id; }
+
+            auto [splitIdx, maxDeg] = findBestSplitPoint(webs[i], g, webs);
+
+            if (maxDeg < bestMaxDeg) {
+                bestMaxDeg   = maxDeg;
+                bestId       = webs[i].id;
+                bestSplitIdx = splitIdx;
+            }
         }
 
-        if (bestId == -1) break;   // nothing splittable
+        if (bestId == -1) break;
 
         // Perform the split
         for (size_t i = 0; i < webs.size(); i++) {
@@ -102,16 +115,14 @@ AllocationResult splittingAllocation(vector<Web>& webs, int numRegisters, int ma
             sort(sorted.begin(), sorted.end(),
                 [](const ProgramPoint& a, const ProgramPoint& b) { return a.line < b.line; });
 
-            size_t splitIdx = findBestSplitIndex(webs[i], g, webs);
-
             Web w1, w2;
             w1.id      = nextId++;
             w1.varName = webs[i].varName;
-            w1.points  = { sorted.begin(), sorted.begin() + (ptrdiff_t)splitIdx };
+            w1.points  = { sorted.begin(), sorted.begin() + (ptrdiff_t)bestSplitIdx };
 
             w2.id      = nextId++;
             w2.varName = webs[i].varName;
-            w2.points  = { sorted.begin() + (ptrdiff_t)splitIdx, sorted.end() };
+            w2.points  = { sorted.begin() + (ptrdiff_t)bestSplitIdx, sorted.end() };
 
             webs.erase(webs.begin() + (ptrdiff_t)i);
             webs.insert(webs.begin() + (ptrdiff_t)i, w2);
