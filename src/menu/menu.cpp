@@ -54,7 +54,7 @@ void runMenu() {
                     cout << "Algorithm: " << registers.algorithm << endl;
                 }
                 catch (const exception& e) {
-                    cerr << "\nError: " << e.what() << endl;
+                    cout << "\nError: " << e.what() << "\n";
                 }
 
                 break;
@@ -80,7 +80,7 @@ void runMenu() {
                 }
                 catch (const exception& e) {
 
-                    cerr << "\nError: " << e.what() << endl;
+                    cout << "\nError: " << e.what() << "\n";
                 }
 
                 break;

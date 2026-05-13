@@ -20,12 +20,12 @@ int main(int argc, char* argv[]) {
             runPipeline(variables, registers, argv[4]);
         }
         catch (const exception& e) {
-            cerr << "Error: " << e.what() << "\n";
+            cout << "\nError: " << e.what() << "\n";
             return 1;
         }
         return 0;
     }
 
-    cerr << "Usage: " << argv[0] << " [-b ranges.txt registers.txt allocation.txt]\n";
+    cout << "\nUsage: " << argv[0] << " [-b ranges.txt registers.txt allocation.txt]\n";
     return 1;
 }
