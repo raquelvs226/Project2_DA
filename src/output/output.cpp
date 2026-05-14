@@ -21,8 +21,8 @@ static string formatWebPoints(const Web& web) {
 
         result += to_string(sorted[i].line);
 
-        if (sorted[i].isStart) result += "+";
-        else if (sorted[i].isEnd) result += "-";
+        if (sorted[i].isStart && !sorted[i].isEnd) result += "+";
+        else if (sorted[i].isEnd && !sorted[i].isStart) result += "-";
     }
     return result;
 }
@@ -79,6 +79,37 @@ void writeOutputFile(
         // print spilled webs
         for (int webId : spilledWebs)
             file << "M: web" << webId << "\n";
+    }
+
+    // ── Spilling details ──────────────────────────────────────────────────────
+    if (!result.forcedSpills.empty()) {
+        file << "\n";
+        file << "# Webs explicitly chosen for spilling (variable: web_id)\n";
+        file << "spills: " << result.forcedSpills.size() << "\n";
+        for (size_t i = 0; i < result.forcedSpills.size(); i++) {
+            int id = result.forcedSpills[i];
+            string varName;
+            for (const auto& w : webs)
+                if (w.id == id) { varName = w.varName; break; }
+            file << "spill" << i << ": " << varName << ",web" << id << "\n";
+        }
+    }
+
+    // ── Splitting details ─────────────────────────────────────────────────────
+    if (!result.splitLog.empty()) {
+        file << "\n";
+        file << "# Splits performed (original_web -> partA,partB at save/restore line)\n";
+        file << "splits: " << result.splitLog.size() << "\n";
+        for (size_t i = 0; i < result.splitLog.size(); i++) {
+            const auto& s = result.splitLog[i];
+            string varName;
+            for (const auto& w : webs)
+                if (w.id == s.partA || w.id == s.partB) { varName = w.varName; break; }
+            file << "split" << i << ": " << varName
+                 << ",web" << s.originalId
+                 << " -> web" << s.partA << ",web" << s.partB
+                 << " at " << s.splitLine << "\n";
+        }
     }
 
     file.close();

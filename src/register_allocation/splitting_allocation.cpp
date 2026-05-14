@@ -38,19 +38,14 @@ static pair<size_t, int> findBestSplitPoint(
     int    bestMaxDeg = INT_MAX;
 
     for (size_t splitIdx = 1; splitIdx < n; splitIdx++) {
-        set<int> linesA, linesB;
-        for (size_t k = 0;        k < splitIdx; k++) linesA.insert(sorted[k].line);
-        for (size_t k = splitIdx; k < n;        k++) linesB.insert(sorted[k].line);
+        Web tmpA, tmpB;
+        tmpA.points = { sorted.begin(), sorted.begin() + static_cast<ptrdiff_t>(splitIdx) };
+        tmpB.points = { sorted.begin() + static_cast<ptrdiff_t>(splitIdx), sorted.end() };
 
         int degA = 0, degB = 0;
         for (const auto* nb : neighbours) {
-            bool overA = false, overB = false;
-            for (const auto& p : nb->points) {
-                if (linesA.count(p.line)) overA = true;
-                if (linesB.count(p.line)) overB = true;
-            }
-            if (overA) degA++;
-            if (overB) degB++;
+            if (websInterfere(tmpA, *nb)) degA++;
+            if (websInterfere(tmpB, *nb)) degB++;
         }
 
         int maxDeg = max(degA, degB);
@@ -68,6 +63,8 @@ AllocationResult splittingAllocation(vector<Web>& webs, int numRegisters, int ma
     int nextId = 0;
     for (const auto& w : webs) nextId = max(nextId, w.id + 1);
 
+    vector<SplitRecord> splitLog;
+
     for (int splits = 0; splits <= maxSplits; splits++) {
 
         vector<Web> tmp = webs;
@@ -78,8 +75,10 @@ AllocationResult splittingAllocation(vector<Web>& webs, int numRegisters, int ma
             [](const Web& w) { return w.reg >= 0; });
 
         if (clean) {
-            for (size_t i = 0; i < webs.size(); i++)
-                webs[i].reg = tmp[i].reg;
+            for (auto& w : webs)
+                for (const auto& tw : tmp)
+                    if (tw.id == w.id) { w.reg = tw.reg; break; }
+            res.splitLog = splitLog;
             return res;
         }
 
@@ -92,15 +91,19 @@ AllocationResult splittingAllocation(vector<Web>& webs, int numRegisters, int ma
         size_t bestSplitIdx = 0;
         int    bestMaxDeg   = INT_MAX;
 
-        for (size_t i = 0; i < tmp.size(); i++) {
-            if (tmp[i].reg != -1)          continue;
-            if (webs[i].points.size() < 2) continue;
+        for (const auto& tw : tmp) {
+            if (tw.reg != -1) continue;
 
-            auto [splitIdx, maxDeg] = findBestSplitPoint(webs[i], g, webs);
+            const Web* orig = nullptr;
+            for (const auto& w : tmp)
+                if (w.id == tw.id) { orig = &w; break; }
+            if (!orig || orig->points.size() < 2) continue;
+
+            auto [splitIdx, maxDeg] = findBestSplitPoint(*orig, g, tmp);
 
             if (maxDeg < bestMaxDeg) {
                 bestMaxDeg   = maxDeg;
-                bestId       = webs[i].id;
+                bestId       = orig->id;
                 bestSplitIdx = splitIdx;
             }
         }
@@ -115,18 +118,24 @@ AllocationResult splittingAllocation(vector<Web>& webs, int numRegisters, int ma
             sort(sorted.begin(), sorted.end(),
                 [](const ProgramPoint& a, const ProgramPoint& b) { return a.line < b.line; });
 
+            int w1id = nextId++;
+            int w2id = nextId++;
+            int splitLine = sorted[bestSplitIdx - 1].line;
+
             Web w1, w2;
-            w1.id      = nextId++;
+            w1.id      = w1id;
             w1.varName = webs[i].varName;
-            w1.points  = { sorted.begin(), sorted.begin() + (ptrdiff_t)bestSplitIdx };
+            w1.points  = { sorted.begin(), sorted.begin() + static_cast<ptrdiff_t>(bestSplitIdx) };
 
-            w2.id      = nextId++;
+            w2.id      = w2id;
             w2.varName = webs[i].varName;
-            w2.points  = { sorted.begin() + (ptrdiff_t)bestSplitIdx, sorted.end() };
+            w2.points  = { sorted.begin() + static_cast<ptrdiff_t>(bestSplitIdx), sorted.end() };
 
-            webs.erase(webs.begin() + (ptrdiff_t)i);
-            webs.insert(webs.begin() + (ptrdiff_t)i, w2);
-            webs.insert(webs.begin() + (ptrdiff_t)i, w1);
+            splitLog.push_back({ bestId, w1id, w2id, splitLine });
+
+            webs.erase(webs.begin() + static_cast<ptrdiff_t>(i));
+            webs.insert(webs.begin() + static_cast<ptrdiff_t>(i), w2);
+            webs.insert(webs.begin() + static_cast<ptrdiff_t>(i), w1);
             break;
         }
     }

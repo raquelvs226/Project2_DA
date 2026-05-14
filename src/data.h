@@ -48,9 +48,19 @@ struct Registers {
 
 // ---------------- Output ----------------
 
+struct SplitRecord {
+    int originalId;   // web that was split
+    int partA;        // first sub-web id
+    int partB;        // second sub-web id
+    int splitLine;    // last line of partA (save/restore point)
+};
+
 struct AllocationResult {
     int usedRegisters = 0;
     map<int, int> webToRegister;
+
+    vector<int>        forcedSpills;  // web ids explicitly chosen for spilling
+    vector<SplitRecord> splitLog;     // record of each split performed
 };
 
 #endif

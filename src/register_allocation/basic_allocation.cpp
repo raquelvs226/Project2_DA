@@ -32,7 +32,7 @@ static int selectSpillNode(
         if (disabled.find(id) != disabled.end()) continue;
 
         int deg = activeDegree(v, disabled);
-        if (deg > bestDegree) {
+        if (deg > bestDegree || (deg == bestDegree && id < bestId)) {
             bestDegree = deg;
             bestId     = id;
         }
@@ -48,8 +48,12 @@ AllocationResult basicAllocation(
     AllocationResult result;
 
     const int N = numRegisters;
-    const auto& vertexSet = graph.getVertexSet();
-    const int totalNodes  = vertexSet.size();
+    auto vertexSet = graph.getVertexSet();
+    // scan in descending ID order so lower-ID webs are colored first in phase 2
+    sort(vertexSet.begin(), vertexSet.end(), [](Vertex<int>* a, Vertex<int>* b) {
+        return a->getInfo() > b->getInfo();
+    });
+    const int totalNodes = (int)vertexSet.size();
 
     // map web id → color assigned (-1 = not yet colored, -2 = spilled)
     unordered_map<int, int> color;

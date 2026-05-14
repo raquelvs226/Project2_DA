@@ -6,6 +6,7 @@
 #include "../register_allocation/basic_allocation.h"
 #include "../register_allocation/spilling_allocation.h"
 #include "../register_allocation/splitting_allocation.h"
+#include "../register_allocation/dsatur_allocation.h"
 #include "../output/output.h"
 
 #include <algorithm>
@@ -52,9 +53,8 @@ void runPipeline(
         result = splittingAllocation(webs, registers.numRegisters, registers.param);
     }
     else if (registers.algorithm == "free") {
-        // T2.4 — to be implemented
         Graph<int> graph = buildInterferenceGraph(webs);
-        result = basicAllocation(graph, webs, registers.numRegisters);
+        result = dsaturAllocation(graph, webs, registers.numRegisters);
     }
     else {
         throw runtime_error("Unknown algorithm: " + registers.algorithm);

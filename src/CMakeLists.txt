@@ -17,6 +17,8 @@ add_executable(Project2
         register_allocation/spilling_allocation.h
         register_allocation/splitting_allocation.cpp
         register_allocation/splitting_allocation.h
+        register_allocation/dsatur_allocation.cpp
+        register_allocation/dsatur_allocation.h
         output/output.cpp
         output/output.h
 )

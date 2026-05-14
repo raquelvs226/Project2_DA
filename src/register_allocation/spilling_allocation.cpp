@@ -15,9 +15,9 @@ static int pickWebToSpill(const vector<Web>& active, const Graph<int>& g) {
     int bestDeg = -1;
 
     for (const auto& w : active) {
-        if (w.reg != -1) continue;                    // already coloured
+        if (w.reg != -1) continue;                    // already colored
         Vertex<int>* v = g.findVertex(w.id);
-        int deg = v ? (int)v->getAdj().size() : 0;
+        int deg = v ? static_cast<int>(v->getAdj().size()) : 0;
         if (deg > bestDeg) { bestDeg = deg; bestId = w.id; }
     }
     return bestId;
@@ -42,13 +42,13 @@ AllocationResult spillingAllocation(vector<Web>& webs, int numRegisters, int max
             [](const Web& w) { return w.reg >= 0; });
 
         if (clean) {
-            // Copy results back and build full AllocationResult
             unordered_map<int,int> regMap;
             for (const auto& aw : active)
                 regMap[aw.id] = aw.reg;
 
             AllocationResult full;
             full.usedRegisters = tmp.usedRegisters;
+            full.forcedSpills  = vector<int>(forcedSpills.begin(), forcedSpills.end());
 
             for (auto& w : webs) {
                 if (forcedSpills.count(w.id)) {
