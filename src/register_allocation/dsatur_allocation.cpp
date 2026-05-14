@@ -1,5 +1,5 @@
 #include "dsatur_allocation.h"
-1
+
 #include <set>
 #include <unordered_map>
 
