@@ -18,7 +18,7 @@ void runMenu() {
 
     do {
 
-        cout << "\n========== REGISTER ALLOCATION TOOL ==========\n";
+        cout << "\n========== MENU ==========\n";
         cout << "1. Load input files\n";
         cout << "2. Run allocation and save results to file\n";
         cout << "0. Exit\n";
