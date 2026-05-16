@@ -5,18 +5,48 @@
 
 using namespace std;
 
-// DSATUR (Degree of SATURation) graph colouring algorithm.
-//
-// At each step the uncoloured vertex with the highest saturation (number of
-// distinct colours already assigned to its neighbours) is selected next.
-// Ties are broken by choosing the vertex with the highest degree in the
-// original graph.  The lowest available colour < numRegisters is then
-// assigned; if none exists the web is spilled to memory.
-//
-// Compared to the basic greedy algorithm, DSATUR adapts its vertex ordering
-// dynamically, which typically produces colourings closer to the chromatic
-// number without exhaustive search.  Spilled webs are reported individually
-// (partial allocation), rather than failing all at once.
+// Tarjan DFS to find articulation points.
+static void articulationDFS(
+    int id,
+    int parentId,
+    int& timer,
+    unordered_map<int, int>& disc,
+    unordered_map<int, int>& low,
+    unordered_map<int, bool>& isArt,
+    const Graph<int>& graph
+) {
+    disc[id] = low[id] = timer++;
+    int children = 0;
+
+    Vertex<int>* v = graph.findVertex(id);
+    for (auto* edge : v->getAdj()) {
+        int nid = edge->getDest()->getInfo();
+        if (disc[nid] == -1) {
+            children++;
+            articulationDFS(nid, id, timer, disc, low, isArt, graph);
+            low[id] = min(low[id], low[nid]);
+            if (parentId == -1 && children > 1) isArt[id] = true;
+            if (parentId != -1 && low[nid] >= disc[id]) isArt[id] = true;
+        } else if (nid != parentId) {
+            low[id] = min(low[id], disc[nid]);
+        }
+    }
+}
+
+static unordered_map<int, bool> findArticulationPoints(const Graph<int>& graph) {
+    unordered_map<int, int>  disc, low;
+    unordered_map<int, bool> isArt;
+    for (auto* v : graph.getVertexSet()) {
+        disc[v->getInfo()] = -1;
+        low[v->getInfo()]  =  0;
+        isArt[v->getInfo()] = false;
+    }
+    int timer = 0;
+    for (auto* v : graph.getVertexSet())
+        if (disc[v->getInfo()] == -1)
+            articulationDFS(v->getInfo(), -1, timer, disc, low, isArt, graph);
+    return isArt;
+}
 
 AllocationResult dsaturAllocation(
     const Graph<int>& graph,
@@ -36,26 +66,35 @@ AllocationResult dsaturAllocation(
     for (auto* v : vertexSet)
         sat[v->getInfo()] = {};
 
+    // Articulation points are structurally critical: colour them earlier so
+    // they have the most colour choices available (additional heuristic).
+    unordered_map<int, bool> isArt = findArticulationPoints(graph);
+
     set<int> usedColours;
 
     for (int step = 0; step < (int)vertexSet.size(); step++) {
 
         // Pick the uncoloured vertex with the highest saturation; break ties
-        // by original graph degree.
+        // by degree, then prefer articulation points.
         Vertex<int>* best    = nullptr;
         int          bestSat = -1;
         int          bestDeg = -1;
+        bool         bestArt = false;
 
         for (auto* v : vertexSet) {
             int id = v->getInfo();
             if (colour[id] != -1) continue;
 
-            int s = (int)sat[id].size();
-            int d = (int)v->getAdj().size();
+            int  s   = (int)sat[id].size();
+            int  d   = (int)v->getAdj().size();
+            bool art = isArt[id];
 
-            if (s > bestSat || (s == bestSat && d > bestDeg)) {
+            if (s > bestSat
+                || (s == bestSat && d > bestDeg)
+                || (s == bestSat && d == bestDeg && art && !bestArt)) {
                 bestSat = s;
                 bestDeg = d;
+                bestArt = art;
                 best    = v;
             }
         }
