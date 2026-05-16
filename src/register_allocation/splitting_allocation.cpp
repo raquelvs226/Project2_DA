@@ -9,9 +9,6 @@
 
 using namespace std;
 
-// For every possible split of `web` into two contiguous halves (by sorted line number),
-// compute deg(A) and deg(B) in the current interference graph.
-// Returns the split index and the resulting min max(deg(A), deg(B)).
 static pair<size_t, int> findBestSplitPoint(
     const Web& web,
     const Graph<int>& g,
@@ -84,9 +81,6 @@ AllocationResult splittingAllocation(vector<Web>& webs, int numRegisters, int ma
 
         if (splits == maxSplits) break;
 
-        // Among all internally-spilled webs with >= 2 points, pick the (web, split point)
-        // pair that minimises max(deg(A), deg(B)) — i.e., the split that most relieves
-        // interference pressure on both resulting sub-webs.
         int    bestId       = -1;
         size_t bestSplitIdx = 0;
         int    bestMaxDeg   = INT_MAX;

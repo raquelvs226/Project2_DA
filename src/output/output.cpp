@@ -40,7 +40,7 @@ void writeOutputFile(
 
     bool allSpilled = result.usedRegisters == 0;
 
-    // ── Webs section ─────────────────────────────────────────────────────────
+
     file << "# Total number of webs followed by the listing of the program points of each one\n";
     file << "# program points in each web are sorted in ascending order\n";
     file << "webs: " << webs.size() << "\n";
@@ -51,7 +51,7 @@ void writeOutputFile(
 
     file << "\n";
 
-    // ── Registers section ─────────────────────────────────────────────────────
+
     file << "# Total number of registers used, followed by assignment to webs\n";
     file << "registers: " << result.usedRegisters << "\n";
 
@@ -81,7 +81,7 @@ void writeOutputFile(
             file << "M: web" << webId << "\n";
     }
 
-    // ── Spilling details ──────────────────────────────────────────────────────
+
     if (!result.forcedSpills.empty()) {
         file << "\n";
         file << "# Webs explicitly chosen for spilling (variable: web_id)\n";
@@ -95,7 +95,7 @@ void writeOutputFile(
         }
     }
 
-    // ── Splitting details ─────────────────────────────────────────────────────
+
     if (!result.splitLog.empty()) {
         file << "\n";
         file << "# Splits performed (original_web -> partA,partB at save/restore line)\n";

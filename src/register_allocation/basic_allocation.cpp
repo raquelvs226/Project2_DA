@@ -57,7 +57,7 @@ AllocationResult basicAllocation(
     set<int>   disabled;   // nodes removed in phase 1
     stack<int> nodeStack;  // order in which to color in phase 2
 
-    // ── Phase 1: Simplification ───────────────────────────────────────────────
+    // Phase 1: Simplification
     while ((int)disabled.size() < totalNodes) {
         bool removed = false;
 
@@ -86,7 +86,7 @@ AllocationResult basicAllocation(
         }
     }
 
-    // ── Phase 2: Coloring ─────────────────────────────────────────────────────
+    // Phase 2: Coloring
     set<int> usedColors;
     while (!nodeStack.empty()) {
         int id = nodeStack.top();
@@ -120,7 +120,7 @@ AllocationResult basicAllocation(
         }
     }
 
-    // ── Build result ──────────────────────────────────────────────────────────
+    // Build result
     for (auto& web : webs) {
         int c = color[web.id];
         if (c >= 0) {

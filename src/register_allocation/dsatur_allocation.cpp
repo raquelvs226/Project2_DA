@@ -66,8 +66,6 @@ AllocationResult dsaturAllocation(
     for (auto* v : vertexSet)
         sat[v->getInfo()] = {};
 
-    // Articulation points are structurally critical: colour them earlier so
-    // they have the most colour choices available (additional heuristic).
     unordered_map<int, bool> isArt = findArticulationPoints(graph);
 
     set<int> usedColours;

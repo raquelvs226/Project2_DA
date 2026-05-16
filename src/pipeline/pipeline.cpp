@@ -30,7 +30,7 @@ void runPipeline(
     // 1. Build webs
     vector<Web> webs = buildWebs(variables);
 
-    // 3. Register allocation (dispatch by algorithm)
+    // 2. Register allocation (dispatch by algorithm)
     AllocationResult result;
 
     if (registers.algorithm == "basic") {
@@ -60,6 +60,6 @@ void runPipeline(
         throw runtime_error("Unknown algorithm: " + registers.algorithm);
     }
 
-    // 4. Output
+    // 3. Output
     writeOutputFile(outputFile, webs, result);
 }

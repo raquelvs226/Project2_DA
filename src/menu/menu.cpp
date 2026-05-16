@@ -48,7 +48,6 @@ void runMenu() {
 
                     cout << "\nFiles loaded successfully.\n";
 
-                    // Optional debug info
                     cout << "Variables loaded: " << variables.size() << endl;
                     cout << "Registers: " << registers.numRegisters << endl;
                     cout << "Algorithm: " << registers.algorithm << endl;
