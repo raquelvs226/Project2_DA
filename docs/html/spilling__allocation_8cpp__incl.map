@@ -1,0 +1,40 @@
+<map id="register_allocation/spilling_allocation.cpp" name="register_allocation/spilling_allocation.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="461,5,632,45"/>
+<area shape="rect" id="Node000002" href="$spilling__allocation_8h.html" title="Register allocation with iterative web spilling." alt="" coords="5,101,157,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="462,44,170,96,147,100,146,95,169,91,461,38"/>
+<area shape="rect" id="Node000007" href="$basic__allocation_8h.html" title="Chaitin&#45;style graph&#45;coloring register allocation algorithm." alt="" coords="371,101,509,126"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="525,48,467,94,464,90,521,44"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="493,255,573,280"/>
+<area shape="poly" id="edge21_Node000001_Node000009" title=" " alt="" coords="548,46,537,241,532,241,543,45"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="597,255,683,280"/>
+<area shape="poly" id="edge20_Node000001_Node000012" title=" " alt="" coords="556,44,633,241,628,243,552,46"/>
+<area shape="rect" id="Node000013" href="$graph__builder_8h.html" title="Functions for constructing the interference graph from a set of webs." alt="" coords="182,93,346,133"/>
+<area shape="poly" id="edge16_Node000001_Node000013" title=" " alt="" coords="485,48,340,92,338,87,484,43"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="635,101,677,126"/>
+<area shape="poly" id="edge22_Node000001_Node000014" title=" " alt="" coords="573,44,632,90,628,94,569,48"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="702,101,826,126"/>
+<area shape="poly" id="edge23_Node000001_Node000015" title=" " alt="" coords="595,43,723,93,721,98,593,48"/>
+<area shape="rect" id="Node000003" href="$data_8h.html" title="Core data structures used throughout the register allocation tool." alt="" coords="157,181,219,207"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,124,163,171,160,175,95,128"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="235,255,298,280"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="89,125,111,163,127,185,146,205,184,230,223,249,221,253,181,235,142,209,123,189,106,166,84,128"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="152,255,211,280"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="190,207,186,241,181,241,184,207"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="202,205,246,244,242,247,199,209"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="77,255,128,280"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="176,209,129,248,125,244,173,205"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="404,129,233,181,232,176,403,123"/>
+<area shape="poly" id="edge15_Node000007_Node000005" title=" " alt="" coords="429,128,292,247,288,243,425,124"/>
+<area shape="rect" id="Node000008" href="$Graph_8h.html" title=" " alt="" coords="380,181,495,207"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="442,126,441,168,436,167,437,126"/>
+<area shape="poly" id="edge11_Node000008_Node000005" title=" " alt="" coords="411,209,308,252,306,247,409,204"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="454,205,508,244,505,248,451,209"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="406,255,469,280"/>
+<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="440,207,440,241,435,241,435,207"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="323,255,381,280"/>
+<area shape="poly" id="edge13_Node000008_Node000011" title=" " alt="" coords="425,209,378,248,375,244,422,205"/>
+<area shape="poly" id="edge14_Node000008_Node000012" title=" " alt="" coords="471,204,595,248,594,253,469,209"/>
+<area shape="poly" id="edge17_Node000013_Node000003" title=" " alt="" coords="248,135,211,173,207,169,244,132"/>
+<area shape="poly" id="edge19_Node000013_Node000005" title=" " alt="" coords="267,134,269,241,264,241,262,134"/>
+<area shape="poly" id="edge18_Node000013_Node000008" title=" " alt="" coords="307,131,400,173,398,178,304,136"/>
+</map>

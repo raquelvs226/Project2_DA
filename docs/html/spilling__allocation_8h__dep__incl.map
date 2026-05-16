@@ -1,0 +1,7 @@
+<map id="register_allocation/spilling_allocation.h" name="register_allocation/spilling_allocation.h">
+<area shape="rect" id="Node000001" title="Register allocation with iterative web spilling." alt="" coords="99,5,255,45"/>
+<area shape="rect" id="Node000002" href="$pipeline_8cpp.html" title=" " alt="" coords="5,101,163,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,57,99,102,95,98,145,53"/>
+<area shape="rect" id="Node000003" href="$spilling__allocation_8cpp.html" title=" " alt="" coords="187,93,357,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,53,253,91,249,95,207,57"/>
+</map>

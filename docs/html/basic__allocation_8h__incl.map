@@ -1,0 +1,23 @@
+<map id="register_allocation/basic_allocation.h" name="register_allocation/basic_allocation.h">
+<area shape="rect" id="Node000001" title="Chaitin&#45;style graph&#45;coloring register allocation algorithm." alt="" coords="123,5,266,45"/>
+<area shape="rect" id="Node000002" href="$data_8h.html" title="Core data structures used throughout the register allocation tool." alt="" coords="89,93,151,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,47,143,85,139,81,175,44"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="163,167,226,192"/>
+<area shape="poly" id="edge11_Node000001_Node000004" title=" " alt="" coords="197,46,197,153,192,153,192,46"/>
+<area shape="rect" id="Node000006" href="$Graph_8h.html" title=" " alt="" coords="281,93,396,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="230,43,307,84,304,89,228,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,64,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,121,61,160,57,156,105,117"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="134,117,174,155,171,159,130,121"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="88,167,139,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="122,119,118,153,113,153,116,119"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="317,121,232,163,229,158,314,116"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="251,167,331,192"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="333,121,308,157,304,154,329,118"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="355,167,418,192"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="349,118,374,154,369,157,344,121"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="443,167,501,192"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="361,116,439,158,437,162,359,121"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="525,167,611,192"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="376,116,518,160,517,165,375,121"/>
+</map>

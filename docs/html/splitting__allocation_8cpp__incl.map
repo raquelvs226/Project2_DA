@@ -1,0 +1,40 @@
+<map id="register_allocation/splitting_allocation.cpp" name="register_allocation/splitting_allocation.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="464,5,641,45"/>
+<area shape="rect" id="Node000002" href="$splitting__allocation_8h.html" title="Register allocation with iterative web splitting." alt="" coords="5,101,164,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="464,44,176,96,152,101,151,95,175,91,463,39"/>
+<area shape="rect" id="Node000007" href="$basic__allocation_8h.html" title="Chaitin&#45;style graph&#45;coloring register allocation algorithm." alt="" coords="377,101,515,126"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="531,48,473,94,470,90,527,44"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="499,255,579,280"/>
+<area shape="poly" id="edge22_Node000001_Node000009" title=" " alt="" coords="554,46,543,241,538,241,549,45"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="603,255,689,280"/>
+<area shape="poly" id="edge20_Node000001_Node000012" title=" " alt="" coords="562,44,639,241,634,243,558,46"/>
+<area shape="rect" id="Node000013" href="$graph__builder_8h.html" title="Functions for constructing the interference graph from a set of webs." alt="" coords="188,93,352,133"/>
+<area shape="poly" id="edge16_Node000001_Node000013" title=" " alt="" coords="491,48,346,92,344,87,490,43"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="641,101,707,126"/>
+<area shape="poly" id="edge21_Node000001_Node000014" title=" " alt="" coords="581,43,648,90,645,95,578,48"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="731,101,774,126"/>
+<area shape="poly" id="edge23_Node000001_Node000015" title=" " alt="" coords="605,43,720,91,722,92,720,97,718,96,603,48"/>
+<area shape="rect" id="Node000003" href="$data_8h.html" title="Core data structures used throughout the register allocation tool." alt="" coords="163,181,225,207"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,124,168,171,165,175,99,128"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="241,255,304,280"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="93,125,116,163,132,185,152,205,190,230,229,248,227,253,187,235,148,209,128,189,111,166,88,128"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="158,255,217,280"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="196,207,192,241,187,241,190,207"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="208,205,252,244,248,247,205,209"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="83,255,134,280"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="182,209,135,248,131,244,179,205"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="410,129,239,181,238,176,409,123"/>
+<area shape="poly" id="edge15_Node000007_Node000005" title=" " alt="" coords="435,128,298,247,294,243,431,124"/>
+<area shape="rect" id="Node000008" href="$Graph_8h.html" title=" " alt="" coords="386,181,501,207"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="448,126,447,168,442,167,443,126"/>
+<area shape="poly" id="edge11_Node000008_Node000005" title=" " alt="" coords="417,209,314,252,312,247,415,204"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="460,205,514,244,511,248,457,209"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="412,255,475,280"/>
+<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="446,207,446,241,441,241,441,207"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="329,255,387,280"/>
+<area shape="poly" id="edge13_Node000008_Node000011" title=" " alt="" coords="431,209,384,248,381,244,428,205"/>
+<area shape="poly" id="edge14_Node000008_Node000012" title=" " alt="" coords="477,204,601,248,600,253,475,209"/>
+<area shape="poly" id="edge17_Node000013_Node000003" title=" " alt="" coords="254,135,217,173,213,169,250,132"/>
+<area shape="poly" id="edge19_Node000013_Node000005" title=" " alt="" coords="273,134,275,241,270,241,268,134"/>
+<area shape="poly" id="edge18_Node000013_Node000008" title=" " alt="" coords="313,131,406,173,404,178,310,136"/>
+</map>

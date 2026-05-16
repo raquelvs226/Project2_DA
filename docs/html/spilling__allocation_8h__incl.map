@@ -1,0 +1,12 @@
+<map id="register_allocation/spilling_allocation.h" name="register_allocation/spilling_allocation.h">
+<area shape="rect" id="Node000001" title="Register allocation with iterative web spilling." alt="" coords="75,5,231,45"/>
+<area shape="rect" id="Node000002" href="$data_8h.html" title="Core data structures used throughout the register allocation tool." alt="" coords="87,93,150,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,47,132,82,127,79,143,44"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="163,167,226,192"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="161,45,191,153,185,154,156,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,64,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,121,61,160,57,155,103,117"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="133,117,174,155,170,159,129,121"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="88,167,139,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="120,119,118,153,113,153,115,119"/>
+</map>

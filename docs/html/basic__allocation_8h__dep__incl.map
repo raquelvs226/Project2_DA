@@ -1,0 +1,11 @@
+<map id="register_allocation/basic_allocation.h" name="register_allocation/basic_allocation.h">
+<area shape="rect" id="Node000001" title="Chaitin&#45;style graph&#45;coloring register allocation algorithm." alt="" coords="290,5,433,45"/>
+<area shape="rect" id="Node000002" href="$pipeline_8cpp.html" title=" " alt="" coords="5,101,163,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="288,52,122,103,120,98,287,47"/>
+<area shape="rect" id="Node000003" href="$basic__allocation_8cpp.html" title=" " alt="" coords="187,93,346,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="332,57,289,95,286,91,328,53"/>
+<area shape="rect" id="Node000004" href="$spilling__allocation_8cpp.html" title=" " alt="" coords="371,93,541,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="394,53,437,91,433,95,391,57"/>
+<area shape="rect" id="Node000005" href="$splitting__allocation_8cpp.html" title=" " alt="" coords="566,93,743,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="439,47,591,91,590,96,438,52"/>
+</map>

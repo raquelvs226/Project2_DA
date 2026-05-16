@@ -1,0 +1,33 @@
+/**
+ * @mainpage Programming Project II - Register Allocation Tool
+ *
+ * @section intro Introduction
+ * Tool for performing graph-coloring register allocation on variable live ranges.
+ * Live ranges are parsed from an input file, merged into webs, and an interference
+ * graph is built. Four allocation algorithms are available, ranging from a simple
+ * Chaitin simplification to DSatur with articulation-point heuristics.
+ *
+ * @section algorithms Allocation Algorithms
+ * - **basic** — Chaitin simplification with optimistic coloring; if any web cannot
+ *   be colored all webs are assigned to memory.
+ * - **spilling** — iteratively forces the highest-degree web to memory and retries
+ *   basic allocation, up to a configurable maximum number of spills.
+ * - **splitting** — iteratively splits the web whose partition best reduces
+ *   interference pressure and retries basic allocation, up to a configurable
+ *   maximum number of splits.
+ * - **free** — DSatur greedy coloring with tie-breaking by degree and articulation
+ *   points; minimises spills without a forced-spill budget.
+ *
+ * @section structure Project Structure
+ * - **parser** — reads and parses the ranges and registers input files
+ * - **webs** — merges overlapping live ranges of each variable into webs
+ * - **graph_builder** — builds the undirected interference graph from webs
+ * - **register_allocation** — basic, spilling, splitting, and DSatur allocators
+ * - **output** — writes the allocation results to the output file
+ * - **pipeline** — orchestrates the full workflow
+ * - **menu** — interactive command-line interface
+ *
+ * @section authors Authors
+ * - Nuno Gonçalves
+ * - Raquel Silva
+ */

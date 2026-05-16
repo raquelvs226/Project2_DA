@@ -1,0 +1,26 @@
+<map id="graph/Graph.h" name="graph/Graph.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="644,5,759,31"/>
+<area shape="rect" id="Node000002" href="$graph__builder_8h.html" title="Functions for constructing the interference graph from a set of webs." alt="" coords="389,79,541,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="655,37,523,81,521,76,653,32"/>
+<area shape="rect" id="Node000004" href="$pipeline_8cpp.html" title=" " alt="" coords="761,174,919,199"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="721,40,783,117,831,172,827,175,779,120,717,43"/>
+<area shape="rect" id="Node000007" href="$basic__allocation_8h.html" title="Chaitin&#45;style graph&#45;coloring register allocation algorithm." alt="" coords="575,79,718,119"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="688,43,662,80,658,77,683,40"/>
+<area shape="rect" id="Node000009" href="$dsatur__allocation_8h.html" title="DSatur graph&#45;coloring register allocation with articulation&#45;point heuristic." alt="" coords="794,79,945,119"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="739,34,830,76,827,81,737,39"/>
+<area shape="rect" id="Node000003" href="$graph__builder_8cpp.html" title=" " alt="" coords="5,167,157,207"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="376,123,158,171,157,166,375,117"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="556,118,791,171,790,177,554,123"/>
+<area shape="rect" id="Node000005" href="$spilling__allocation_8cpp.html" title=" " alt="" coords="181,167,352,207"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="410,127,311,169,309,164,408,122"/>
+<area shape="rect" id="Node000006" href="$splitting__allocation_8cpp.html" title=" " alt="" coords="377,167,554,207"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="468,133,468,166,463,166,463,133"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="703,122,815,172,813,176,701,127"/>
+<area shape="poly" id="edge10_Node000007_Node000005" title=" " alt="" coords="563,122,351,169,349,164,561,116"/>
+<area shape="poly" id="edge11_Node000007_Node000006" title=" " alt="" coords="596,127,506,169,504,164,594,122"/>
+<area shape="rect" id="Node000008" href="$basic__allocation_8cpp.html" title=" " alt="" coords="578,167,737,207"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="653,132,658,166,652,167,648,133"/>
+<area shape="poly" id="edge13_Node000009_Node000004" title=" " alt="" coords="861,132,847,174,842,173,856,131"/>
+<area shape="rect" id="Node000010" href="$dsatur__allocation_8cpp.html" title=" " alt="" coords="943,167,1108,207"/>
+<area shape="poly" id="edge14_Node000009_Node000010" title=" " alt="" coords="917,123,992,164,990,169,914,128"/>
+</map>
