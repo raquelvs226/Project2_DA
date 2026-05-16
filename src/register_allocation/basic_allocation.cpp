@@ -1,10 +1,8 @@
 #include "basic_allocation.h"
-
 #include <stack>
 #include <set>
 #include <unordered_map>
 #include <algorithm>
-
 using namespace std;
 
 static int activeDegree(
@@ -26,11 +24,9 @@ static int selectSpillNode(
 ) {
     int bestId     = -1;
     int bestDegree = -1;
-
     for (auto v : vertexSet) {
         int id = v->getInfo();
         if (disabled.find(id) != disabled.end()) continue;
-
         int deg = activeDegree(v, disabled);
         if (deg > bestDegree || (deg == bestDegree && id < bestId)) {
             bestDegree = deg;
@@ -46,10 +42,8 @@ AllocationResult basicAllocation(
     int numRegisters
 ) {
     AllocationResult result;
-
     const int N = numRegisters;
     auto vertexSet = graph.getVertexSet();
-    // scan in descending ID order so lower-ID webs are colored first in phase 2
     sort(vertexSet.begin(), vertexSet.end(), [](Vertex<int>* a, Vertex<int>* b) {
         return a->getInfo() > b->getInfo();
     });
@@ -63,38 +57,37 @@ AllocationResult basicAllocation(
     set<int>   disabled;   // nodes removed in phase 1
     stack<int> nodeStack;  // order in which to color in phase 2
 
-    // ── Phase 1: Simplification ──────────────────────────────────────────────
+    // ── Phase 1: Simplification ───────────────────────────────────────────────
     while ((int)disabled.size() < totalNodes) {
-
         bool removed = false;
 
-        // try to find a node with active degree < N
-        for (auto v : vertexSet) {
-            int id = v->getInfo();
-            if (disabled.find(id) != disabled.end()) continue;
-
-            if (activeDegree(v, disabled) < N) {
-                disabled.insert(id);
-                nodeStack.push(id);
-                removed = true;
-                // restart scan (degrees changed)
-                break;
+        // keep removing nodes with active degree < N until none left
+        bool removedAny = true;
+        while (removedAny) {
+            removedAny = false;
+            for (auto v : vertexSet) {
+                int id = v->getInfo();
+                if (disabled.find(id) != disabled.end()) continue;
+                if (activeDegree(v, disabled) < N) {
+                    disabled.insert(id);
+                    nodeStack.push(id);
+                    removedAny = true;
+                    removed    = true;
+                }
             }
         }
 
-        // no node with degree < N found → must spill
+        // no node with degree < N found → optimistic spill (push anyway)
         if (!removed) {
             int spillId = selectSpillNode(vertexSet, disabled);
             if (spillId == -1) break; // should not happen
-
             disabled.insert(spillId);
-            color[spillId] = -2; // mark as spilled (do NOT push to stack)
+            nodeStack.push(spillId); // optimistic: still try to color in phase 2
         }
     }
 
-    // ── Phase 2: Coloring ────────────────────────────────────────────────────
+    // ── Phase 2: Coloring ─────────────────────────────────────────────────────
     set<int> usedColors;
-
     while (!nodeStack.empty()) {
         int id = nodeStack.top();
         nodeStack.pop();
@@ -119,12 +112,15 @@ AllocationResult basicAllocation(
             }
         }
 
-        color[id] = assigned; // assigned >= 0 always (degree was < N)
-        if (assigned >= 0)
+        if (assigned == -1) {
+            color[id] = -2;
+        } else {
+            color[id] = assigned;
             usedColors.insert(assigned);
+        }
     }
 
-    // ── Build result ─────────────────────────────────────────────────────────
+    // ── Build result ──────────────────────────────────────────────────────────
     for (auto& web : webs) {
         int c = color[web.id];
         if (c >= 0) {
@@ -134,7 +130,6 @@ AllocationResult basicAllocation(
             web.reg = -1; // spilled to memory
         }
     }
-
     result.usedRegisters = (int)usedColors.size();
     return result;
 }
