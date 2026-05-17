@@ -31,10 +31,11 @@ using namespace std;
  * @return AllocationResult with register assignments, used register count,
  *         and the list of forced-spill web ids.
  *
- * @note Complexity: O(K * (W² * P² + W² + W * E)), where K = maxSpills, W is
+ * @note Complexity: O(K * (W² * P² + W * E)), where K = maxSpills, W is
  * the number of webs, P is the maximum number of program points per web, and
  * E is the number of edges in the interference graph. Each iteration rebuilds
- * the interference graph and runs basicAllocation() on the active subset.
+ * the interference graph (O(W²·P²)) and runs basicAllocation() (O(W²+W·E))
+ * on the active subset; the W² term is dominated by W²·P².
  */
 AllocationResult spillingAllocation(vector<Web>& webs, int numRegisters, int maxSpills);
 

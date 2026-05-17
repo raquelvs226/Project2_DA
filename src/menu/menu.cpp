@@ -75,7 +75,7 @@ void runMenu() {
 
                     runPipeline(variables, registers, outputFile);
 
-                    cout << "\nAllocation completed successfully.\n";
+                    cout << "\nResults saved to file.\n";
                 }
                 catch (const exception& e) {
 

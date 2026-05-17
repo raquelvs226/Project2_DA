@@ -33,7 +33,7 @@ using namespace std;
  * @param numRegisters Number of available physical registers (colors).
  * @return AllocationResult with register assignments and the count of registers used.
  *
- * @note Complexity: O(W² + W * E), where W is the number of webs and E is the
+ * @note Complexity: O(W * E), where W is the number of webs and E is the
  * number of edges in the interference graph. Each of the W simplification steps
  * scans all remaining active nodes and their adjacency lists to compute degrees.
  */
