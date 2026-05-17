@@ -26,8 +26,8 @@ programa e um ficheiro de configuração com o número de registos disponíveis
 e o algoritmo a usar, a ferramenta constrói as webs, o grafo de 
 interferência e aplica um algoritmo de graph coloring para determinar a 
 alocação ótima de registos. O programa pode ser executado em dois modos: 
-→ Modo interativo: menu com opções 
-→ Modo batch: ./myProg -b ranges.txt registers.txt allocation.txt
+  - Modo interativo: menu com opções 
+  - Modo batch: ./myProg -b ranges.txt registers.txt allocation.txt
 
 - Para a realização deste projeto implementamos 4 algoritmos, nomeadamente o Basic Register Allocation, Register Allocation com Web Spilling, Register Allocation com Web Splitting e Register Allocation com DSATUR.
 
