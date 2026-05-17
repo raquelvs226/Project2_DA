@@ -182,7 +182,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structAllocationResult.html" title="Holds the outcome of a register allocation run.">AllocationResult</a> with register assignments, used register count, and the list of forced-spill web ids.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Complexity: O(K * (W² * P² + W² + W * E)), where K = maxSpills, W is the number of webs, P is the maximum number of program points per web, and E is the number of edges in the interference graph. Each iteration rebuilds the interference graph and runs <a class="el" href="basic__allocation_8cpp.html#ae5a426c30913fcd8bfb06163c1db938e" title="Performs register allocation using the basic Chaitin simplification algorithm.">basicAllocation()</a> on the active subset. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Complexity: O(K * (W² * P² + W * E)), where K = maxSpills, W is the number of webs, P is the maximum number of program points per web, and E is the number of edges in the interference graph. Each iteration rebuilds the interference graph (O(W²·P²)) and runs <a class="el" href="basic__allocation_8cpp.html#ae5a426c30913fcd8bfb06163c1db938e" title="Performs register allocation using the basic Chaitin simplification algorithm.">basicAllocation()</a> (O(W²+W·E)) on the active subset; the W² term is dominated by W²·P². </dd></dl>
 
 </div>
 </div>

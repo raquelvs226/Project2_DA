@@ -175,7 +175,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structAllocationResult.html" title="Holds the outcome of a register allocation run.">AllocationResult</a> with register assignments and the count of registers used.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Complexity: O(W² + W * E), where W is the number of webs and E is the number of edges in the interference graph. Each of the W simplification steps scans all remaining active nodes and their adjacency lists to compute degrees. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Complexity: O(W * E), where W is the number of webs and E is the number of edges in the interference graph. Each of the W simplification steps scans all remaining active nodes and their adjacency lists to compute degrees. </dd></dl>
 
 </div>
 </div>
