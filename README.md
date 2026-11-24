@@ -1,58 +1,48 @@
-# Description of datasets for the basic algorithm
+# Design of Algorithms Project 2 - Compiler Register Allocation Algorithms
 
-| Range         | Registers        | Ideal allocation | Allocation        |
-| ------------- | ---------------- | ---------------- | ----------------- |
-| `ranges1.txt` | `registers2.txt` | 2 registers      | `allocation1.txt` |
-| `ranges2.txt` | `registers2.txt` | 2 registers      | `allocation2.txt` |
-| `ranges3.txt` | `registers2.txt` | 2 registers      | `allocation3.txt` |
-| `ranges4.txt` | `registers1.txt` | 1 register       | `allocation4.txt` |
-| `ranges5.txt` | `registers1.txt` | 1 register       | `allocation5.txt` |
-| `ranges6.txt` | `registers3.txt` | 3 registers      | `allocation6.txt` |
+## Grade: 19,6/20
 
-## Output
+## Register Allocation Tool
 
-The `output` folder contains the solutions produced by the implemented algorithm for each input instance.
+- This project implements a register allocation tool for compilers. Given a file containing the live ranges of a program's variables and a configuration file specifying the number of available registers and the algorithm to use, the tool constructs the webs and the interference graph, then applies a graph coloring algorithm to determine the register allocation.
 
-It is important to note that:
-- The naming of webs in the output files can differ from the ones in your implementation.
-- The specific registers assigned to each web may also vary.
+- The program can be executed in two modes:
+  - **Interactive mode:** Provides a menu with several options.
+  - **Batch mode:** `./Project2 -b ranges.txt registers.txt allocation.txt`
 
-These differences are expected, as multiple valid allocations can exist for the same problem, as long as they respect the register constraints and produce a correct allocation.
-
-# Register Allocation Tool
-- Este projeto implementa uma ferramenta de alocação de registos para 
-compiladores. Dado um ficheiro com os live ranges das variáveis de um
-programa e um ficheiro de configuração com o número de registos disponíveis
-e o algoritmo a usar, a ferramenta constrói as webs, o grafo de 
-interferência e aplica um algoritmo de graph coloring para determinar a 
-alocação ótima de registos. O programa pode ser executado em dois modos: 
-  - Modo interativo: menu com opções 
-  - Modo batch: ./Project2 -b ranges.txt registers.txt allocation.txt
-
-- Para a realização deste projeto implementamos 4 algoritmos, nomeadamente o Basic Register Allocation, Register Allocation com Web Spilling, com Web Splitting e com DSATUR. 
+- For this project, we implemented four algorithms: **Basic Register Allocation**, **Register Allocation with Web Spilling**, **Register Allocation with Web Splitting**, and **Register Allocation with DSATUR**.
 
 ### Basic Register Allocation
-- O objetivo do Basic Register Allocation é colorir o grafo de interferência com N cores (registos), minimizando o número de cores usadas.
-- Na primeira fase, a Simplificação, são removidos nós com grau menor que N para uma stack. Se nenhum nó tiver grau menor que N, o nó com maior grau é adicionado à stack e tenta ser colorido na fase seguinte.
-- Na segunda fase, o Coloring, os nós são desempilhados um a um e é atribuído a cada um a cor mais baixa disponível que não esteja nos seus vizinhos. Se no final houver algum nó que não conseguiu ser colorido, o algoritmo falha completamente e todas as webs vão para memória, o número de registos no output é 0 e todas as webs ficam com M. Um warning é também emitido a indicar que a alocação falhou.
-- Complexidade: O(W x E)
 
-### Register Allocation com Web Spilling
-- O Spilling é utilizado quando o Basic Allocation falha com N registos. Permite mandar até K webs para memória para simplificar o grafo e tentar colorir o resto, onde K é o valor fornecido no ficheiro de configuração (algorithm: spilling, K).
-- O algoritmo repete até K tentativas. Em cada tentativa constrói o grafo apenas com as webs não spilled e corre o Basic Allocation. Caso todas as webs tenham sido coloridas, o algoritmo termina com sucesso. Se não, escolhe a web com maior grau e força o seu spill, tentando de novo. Começa sempre com 1 spill, só aumentando se necessário.
-- Escolha da web para dar spill: escolhemos a web com maior grau no grafo, ou seja, a que tem mais interferências com outras webs. Ao remover a web mais problemática, libertamos o maior número de interferências de uma só vez, maximizando a simplificação do grafo e aumentando a probabilidade de sucesso na tentativa seguinte. Só são consideradas as webs não coloridas, pois as já coloridas já têm registo atribuído.
-- Se após K tentativas o Basic ainda falha, todas as webs vão para memória.
-- Complexidade: O(K x (W² x P² + W x E)) , onde K número máximo de spills, W número de webs, E número de interferências, P máximo de program points por web.
+- The goal of Basic Register Allocation is to color the interference graph using N colors (registers), minimizing the number of colors used.
+- The algorithm consists of two phases:
+  1. **Simplification:** Nodes with a degree lower than N are removed and pushed onto a stack. If no such node exists, the node with the highest degree is pushed onto the stack, and an attempt is made to color it in the next phase.
+  2. **Coloring:** Nodes are popped from the stack one by one and assigned the lowest available color that is not used by any of their neighbors.
+- If any node cannot be colored, the entire allocation fails. All webs are spilled to memory, the number of registers in the output is set to 0, and all webs are assigned M. A warning is also issued to indicate that the allocation has failed.
+- **Complexity:** O(W × E)
 
-### Register Allocation com Web Splitting
-- O Splitting é utilizado quando o Basic Allocation falha com N registos. Em vez de mandar webs para memória como o Spilling, parte até K webs em duas metades para reduzir interferências e tentar colorir, onde K é o valor fornecido no ficheiro registers.txt (algorithm: splitting, K).
-- O algoritmo repete até K tentativas. Em cada tentativa corre o Basic Allocation com todas as webs, incluindo as já divididas. Caso todas as webs tenham sido coloridas, o algoritmo termina com sucesso.  Se não, para cada web não colorida testa todos os pontos de corte possíveis, escolhe o que minimiza max(degA, degB) e parte essa web em duas metades.
-- Escolha do ponto de corte: para cada web não colorida, testamos todos os pontos de corte possíveis. Para cada corte calculamos o grau de cada metade, degA para a metade A e degB para a metade B, e escolhemos o corte que minimiza max(degA, degB). Desta forma garantimos que ambas as metades ficam com o menor número de interferências possível, aumentando a probabilidade de ambas serem coloridas com N registos.
-- Se após K tentativas o Basic ainda falha, todas as webs vão para memória. Note-se que o Splitting não garante sucesso, mesmo partindo K webs pode não ser suficiente para colorir com N registos.
-- Complexidade: O(K x (W² x P² + W x P x deg)), onde K número máximo de splits, W número de webs, E número de interferências, P máximo de program points por web, deg = grau máximo do graph.
+### Register Allocation with Web Spilling
 
-### Register Allocation com DSATUR
-- Para o algoritmo livre escolhemos o DSATUR (Degree of Saturation). Ao contrário do Basic que usa uma stack e duas fases com ordenação estática por grau, o DSATUR num só loop escolhe dinamicamente em cada passo o nó com maior saturação, ou seja, o nó cujos vizinhos já têm o maior número de cores distintas atribuídas. Esta estratégia reduz a probabilidade de conflitos futuros ao colorir primeiro os nós mais constrangidos, tendendo a produzir colorações com menos cores no total.
-- Implementámos duas heurísticas de seleção adicionais. O critério principal é a saturação, os nós mais constrangidos são coloridos primeiro (DSATUR). O primeiro tie-breaker é o grau, em empate de saturação, preferimos o nó com maior grau total. O segundo tie-breaker são os nós de articulação, em empate de saturação e grau, preferimos nós cuja remoção desconecta o grafo, por serem estruturalmente mais críticos.
-- Em cada passo, o nó selecionado recebe a cor mais baixa disponível que não esteja nos seus vizinhos. Se não houver cor disponível, apenas esse nó falha, ao contrário do Basic que falha tudo de uma vez, o DSATUR só faz spill ao nó que realmente não tem cor disponível, mantendo os restantes com os seus registos.
-- Complexidade: O(W² + W x N + E), onde W é o número de webs e E o número de interferências.
+- Spilling is used when Basic Register Allocation fails with N available registers. It allows up to K webs to be spilled to memory, simplifying the graph and increasing the chances of successfully coloring the remaining nodes. K is specified in the configuration file (`algorithm: spilling, K`).
+- The algorithm performs up to K attempts. In each attempt, it constructs the graph using only the non-spilled webs and runs Basic Register Allocation. If all remaining webs are successfully colored, the algorithm terminates successfully. Otherwise, it selects the web with the highest degree and forces it to spill before trying again. The algorithm always starts with one spill and only increases the number of spills when necessary.
+- **Web selection strategy:** We select the web with the highest degree in the graph, i.e., the one with the most interferences with other webs. By removing the most problematic web, we eliminate the largest number of interferences at once, maximizing graph simplification and increasing the likelihood of success in the next attempt. Only uncolored webs are considered, since already colored webs have an assigned register.
+- If Basic Register Allocation still fails after K attempts, all webs are spilled to memory.
+- **Complexity:** O(K × (W² × P² + W × E)), where K is the maximum number of spills, W is the number of webs, E is the number of interferences, and P is the maximum number of program points per web.
+
+### Register Allocation with Web Splitting
+
+- Splitting is used when Basic Register Allocation fails with N available registers. Unlike spilling, which sends webs to memory, splitting divides up to K webs into two halves to reduce interferences and improve the chances of successful coloring. K is specified in the `registers.txt` configuration file (`algorithm: splitting, K`).
+- The algorithm performs up to K attempts. In each attempt, it runs Basic Register Allocation with all webs, including those already split. If all webs are successfully colored, the algorithm terminates successfully. Otherwise, for each uncolored web, it tests all possible split points, selects the one that minimizes `max(degA, degB)`, and splits the web into two halves.
+- **Split point selection strategy:** For each uncolored web, all possible split points are tested. For each split, the degree of each resulting half is calculated: `degA` for half A and `degB` for half B. The split point that minimizes `max(degA, degB)` is selected. This ensures that both halves have as few interferences as possible, increasing the likelihood that both can be colored using N registers.
+- If Basic Register Allocation still fails after K attempts, all webs are spilled to memory. Note that splitting does not guarantee success: even after splitting K webs, there may still be insufficient registers to color the graph.
+- **Complexity:** O(K × (W² × P² + W × P × deg)), where K is the maximum number of splits, W is the number of webs, P is the maximum number of program points per web, and deg is the maximum graph degree.
+
+### Register Allocation with DSATUR
+
+- For the additional algorithm, we chose **DSATUR (Degree of Saturation)**. Unlike Basic Register Allocation, which uses a stack and two phases based on a static degree ordering, DSATUR dynamically selects the next node to color in a single loop. At each step, it selects the node with the highest saturation degree, i.e., the node whose neighbors have the greatest number of distinct colors already assigned. This strategy reduces the likelihood of future conflicts by prioritizing the most constrained nodes, generally aiming to produce colorings with fewer colors overall.
+- We implemented two additional selection heuristics:
+  - **Primary criterion – Saturation degree:** Nodes with the highest number of distinct colors among their neighbors are colored first (DSATUR).
+  - **First tie-breaker – Degree:** When two nodes have the same saturation degree, the node with the higher total degree is preferred.
+  - **Second tie-breaker – Articulation points:** When both saturation degree and total degree are equal, preference is given to articulation points, since removing these nodes disconnects the graph and therefore indicates greater structural importance.
+- At each step, the selected node is assigned the lowest available color that is not used by any of its neighbors. If no color is available, only that node fails. Unlike Basic Register Allocation, which fails the entire allocation when a node cannot be colored, DSATUR spills only the node that cannot be assigned a color, preserving the register allocations of the remaining webs.
+- **Complexity:** O(W² + W × N + E), where W is the number of webs, N is the number of available registers, and E is the number of interferences.
